@@ -70,18 +70,11 @@ export class Routing extends Component {
     }
     selectedUnit = (item) => {
         const { currentUnit } = this.state
-        console.log("currentUnit", currentUnit)
-        console.log("focused on", item)
-        if (currentUnit == item.unit) {
-            console.log("current unit the same")
-
-        } else {
-            console.log("update unit")
+       
             this.setState({
                 currentUnit: item.unit,
             })
 
-        }
 
         // this.setState({
         //     unit: item,
@@ -90,7 +83,6 @@ export class Routing extends Component {
     render() {
         const { showMenu, images, playSlideshow, showAvailabilityMenu, currentUnit, currentRoute } = this.state
         const items = [
-
             {
                 title: 'Home',
                 link: '/',
@@ -104,6 +96,7 @@ export class Routing extends Component {
                 link: '/availability',
             },]
         const units = [
+            
             {
                 unit: '506',
                 bed: "1",
@@ -118,7 +111,7 @@ export class Routing extends Component {
                 image: '../assets/images/unit_preview/506.png',
             },
             {
-                unit: '506',
+                unit: '705',
                 bed: "1",
                 bath: "2",
                 sqft: 600,
@@ -128,7 +121,20 @@ export class Routing extends Component {
                 ret: "890",
                 link: 'https://facebook.github.io/react-native/docs/tutorial',
                 description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
+                image: '../assets/images/unit_preview/705.png',
+            },
+            {
+                unit: '706',
+                bed: "1",
+                bath: "2",
+                sqft: 600,
+                exposure: "SE",
+                price: "890,000",
+                cc: "890",
+                ret: "890",
+                link: 'https://facebook.github.io/react-native/docs/tutorial',
+                description: 'Explains a Hello World for React Native.',
+                image: '../assets/images/unit_preview/706.png',
             },
             {
                 unit: '806',
@@ -141,227 +147,10 @@ export class Routing extends Component {
                 ret: "890",
                 link: 'https://facebook.github.io/react-native/docs/tutorial',
                 description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            }, {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
+                image: '../assets/images/unit_preview/806.png',
             },
-            {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            },
-            {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            },
-            {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            },
-            {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            }, {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            },
-            {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            }, {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            },
-            {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            },
-            {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            }, {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            },
-            {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            }, {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            },
-            {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            },
-            {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            }, {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            },
-            {
-                unit: '806',
-                bed: "1",
-                bath: "2",
-                sqft: 600,
-                exposure: "SE",
-                price: "890,000",
-                cc: "890",
-                ret: "890",
-                link: 'https://facebook.github.io/react-native/docs/tutorial',
-                description: 'Explains a Hello World for React Native.',
-                image: '../assets/images/unit_preview/506.png',
-            },
-
-
-
-
+           
+            
         ];
 
         const LinkList = () => (
@@ -411,7 +200,7 @@ export class Routing extends Component {
         const Item = ({ unit }) => {
             return (
 
-                <View style={styles.listItemContainer}>
+                <View key={unit.unit} style={styles.listItemContainer}>
                     <Text style={styles.unit}>{unit.unit}</Text>
                     <Text style={styles.bed}>{unit.bed}</Text>
                     <Text style={styles.bed}>{unit.bath}</Text>
@@ -424,44 +213,6 @@ export class Routing extends Component {
 
             )
         }
-        const TableList = () => (
-            <React.Fragment>
-
-                <View style={styles.listItemContainer}>
-                    <Text style={styles.unitHeader}>Unit</Text>
-                    <Text style={styles.bedHeader}>Bed</Text>
-                    <Text style={styles.bedHeader}>Bath</Text>
-                    <Text style={styles.unitHeader}>SqFt</Text>
-                    <Text style={styles.priceHeader}>Exposure</Text>
-                    <Text style={styles.priceHeader}>Price</Text>
-                    <Text style={styles.unitHeader}>CC</Text>
-                    <Text style={styles.unitHeader}>RET</Text>
-                </View>
-                <View style={styles.separator} />
-                <View  >
-
-                    <FlatList
-                        data={units}
-                        renderItem={({ item }) =>
-                            <TouchableOpacity
-                                id="1000"
-                                onFocus={() => this.selectedUnit(item)}
-                                tvParallaxProperties={{
-                                    default: false,
-                                }}
-                                accessibilityRole={'button'}
-                                activeOpacity={.5}
-                                // onPress={() => console.log(item.link)}
-                                style={styles.listItemContainer}><Item unit={item} />
-                            </TouchableOpacity>
-                        }
-                        keyExtractor={item => item.id}
-                    />
-
-                </View >
-
-            </React.Fragment >
-        );
         console.log("this.state?", this.state)
         return (
             <View>
@@ -491,7 +242,46 @@ export class Routing extends Component {
                                             <View style={styles.availabilityContainer}>
 
                                                 <View style={styles.listContainer} >
-                                                    <TableList />
+                                                <React.Fragment>
+                                                    <View style={styles.listItemContainer}>
+                                                        <Text style={styles.unitHeader}>Unit</Text>
+                                                        <Text style={styles.bedHeader}>Bed</Text>
+                                                        <Text style={styles.bedHeader}>Bath</Text>
+                                                        <Text style={styles.unitHeader}>SqFt</Text>
+                                                        <Text style={styles.priceHeader}>Exposure</Text>
+                                                        <Text style={styles.priceHeader}>Price</Text>
+                                                        <Text style={styles.unitHeader}>CC</Text>
+                                                        <Text style={styles.unitHeader}>RET</Text>
+                                                    </View>
+                                                    <View style={styles.separator} />
+                                                    <View  >
+
+                                                        <FlatList
+                                                            data={units}
+                                                            renderItem={({ item }) =>
+                                                                <React.Fragment  >
+                                                                    <TouchableOpacity
+                                                                    key={item.unit}
+                                                                    onFocus={() => this.selectedUnit(item)}
+                                                                    tvParallaxProperties={{
+                                                                        default: false,
+                                                                    }}
+                                                                    accessibilityRole={'button'}
+                                                                    activeOpacity={1}
+                                                                    style={currentUnit == item.unit ? styles.listItemContainerActive : styles.listItemContainer}>
+                                                                        
+                                                                        <Item key={item.unit} unit={item} />
+                                                                </TouchableOpacity>
+                                                                <View style={styles.separator} />
+                                                                </React.Fragment>
+
+                                                            }
+                                                            keyExtractor={item => item.id}
+                                                        />
+
+                                                    </View >
+
+                                                </React.Fragment >                                                
                                                 </View>
                                                 <View style={styles.imageContainer} >
                                                     <Image
@@ -565,7 +355,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: "100%",
 
-        // backgroundColor: "blue"
+    },
+    listItemContainerActive: {
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: "100%",
+        backgroundColor: "#ffffff3d"
     },
     unit: {
         flex: 2,
