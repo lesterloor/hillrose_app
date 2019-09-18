@@ -1,0 +1,11 @@
+dependencies: \
+  /Users/lesterloor/Desktop/hillrose_app/node_modules/react-native/ReactCommon/yoga/yoga/YGMarker.cpp \
+  /Users/lesterloor/Desktop/hillrose_app/ios/Pods/Target\ Support\ Files/yoga-iOS/yoga-iOS-prefix.pch \
+  /Users/lesterloor/Desktop/hillrose_app/node_modules/react-native/ReactCommon/yoga/yoga/YGMarker.h \
+  /Users/lesterloor/Desktop/hillrose_app/node_modules/react-native/ReactCommon/yoga/yoga/YGMacros.h \
+  /Users/lesterloor/Desktop/hillrose_app/node_modules/react-native/ReactCommon/yoga/yoga/YGConfig.h \
+  /Users/lesterloor/Desktop/hillrose_app/node_modules/react-native/ReactCommon/yoga/yoga/Yoga-internal.h \
+  /Users/lesterloor/Desktop/hillrose_app/node_modules/react-native/ReactCommon/yoga/yoga/CompactValue.h \
+  /Users/lesterloor/Desktop/hillrose_app/node_modules/react-native/ReactCommon/yoga/yoga/YGValue.h \
+  /Users/lesterloor/Desktop/hillrose_app/node_modules/react-native/ReactCommon/yoga/yoga/YGEnums.h \
+  /Users/lesterloor/Desktop/hillrose_app/node_modules/react-native/ReactCommon/yoga/yoga/Yoga.h

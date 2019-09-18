@@ -10,18 +10,24 @@ export class Residences extends Component {
                 {
                     title: '',
                     caption: '',
-                    url: require('.././assets/images/home/01.jpg'),
+                    url: require('.././assets/images/residences/01.png'),
                 },
                 {
                     title: '',
                     caption: '',
-                    url: require('.././assets/images/home/02.jpg'),
+                    url: require('.././assets/images/residences/02.png'),
                 },
                 {
                     title: '',
                     caption: '',
-                    url: require('.././assets/images/home/03.jpg'),
-                }
+                    url: require('.././assets/images/residences/03.png'),
+                },
+                {
+                    title: '',
+                    caption: '',
+                    url: require('.././assets/images/residences/04.png'),
+                },
+
             ],
         };
     }

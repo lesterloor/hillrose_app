@@ -55,6 +55,11 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>ConcettaKalvani-Thin.ttf</string>
+		<string>FuturaFuturisC-Bold.ttf</string>
+		<string>FuturaFuturisLightC.ttf</string>
+		<string>FuturaFuturisC.ttf</string>
+		<string>NeuzeitGro-Reg.otf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>

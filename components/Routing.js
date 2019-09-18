@@ -4,21 +4,43 @@ import { NativeRouter, Route, Link, Redirect } from "react-router-native";
 import Home from "../screens/Home"
 import Test from "../App2"
 import Residences from "../screens/Residences"
+import Neighborhood from "../screens/Neighborhood"
 import { Overlay } from 'react-native-elements';
 import Colors from "./Colors"
-// import { images } from "./Images"
 var TVEventHandler = require('TVEventHandler');
-// console.log("images", images.unit506.uri)
+function getData(number) {
+    let data = [
+        {
+            title: 'Home',
+            link: '/',
+        },
+        {
+            title: 'Residences',
+            link: '/residences',
+        },
+        {
+            title: 'Availability',
+            link: '/availability',
+        },]
 
+    return data;
+}
 export class Routing extends Component {
     _tvEventHandler: any;
     constructor() {
         super()
         this.state = {
             showMenu: false,
+            showMainMenu: true,
+            hoveredMenuIndex: 0,
+            hideAvailableMenu: true,
             showAvailabilityMenu: false,
             isMenuOpened: false,
+            showFloorPlan: false,
+            hoveredMenuItem: null,
+            hoveredAvailabilityMenuItem: "Available",
             currentPage: "/",
+            latestRoute: null,
             currentUnit: 506,
             playSlideshow: false,
             images: {
@@ -26,7 +48,9 @@ export class Routing extends Component {
                 '705': require('../assets/images/unit_preview/705.png'),
                 '706': require('../assets/images/unit_preview/706.png'),
                 '806': require('../assets/images/unit_preview/806.png'),
-
+            },
+            floorplan: {
+                '506': require('../assets/images/floorplans/plan.png'),
             }
         }
     }
@@ -34,12 +58,17 @@ export class Routing extends Component {
         this._tvEventHandler = new TVEventHandler();
         this._tvEventHandler.enable(this, (cmp, evt) => {
             // console.log("evt", evt)
+
             if (evt.eventType === 'longSelect') {
-                console.log("opening")
                 this.setState({ showMenu: true })
             } else if (evt.eventType === 'playPause') {
-                console.log("opening")
                 this.setState(prevState => ({ playSlideshow: !prevState.playSlideshow }))
+            }
+            else if (evt.eventType === 'focus') {
+
+                if (this.state.showFloorPlan) {
+                    this.setState({ showFloorPlan: false })
+                }
             }
         });
     }
@@ -55,7 +84,6 @@ export class Routing extends Component {
     componentDidMount() {
         this._enableTVEventHandler();
         BackHandler.addEventListener('hardwareBackPress', function () {
-            console.log.log("backhandle")
         });
     }
 
@@ -70,19 +98,69 @@ export class Routing extends Component {
     }
     selectedUnit = (item) => {
         const { currentUnit } = this.state
-       
-            this.setState({
-                currentUnit: item.unit,
-            })
+
+        this.setState({
+            currentUnit: item.unit,
+        })
 
 
-        // this.setState({
-        //     unit: item,
-        // })
     }
+
+    selectedMenuItem = (item, index) => {
+        console.log("hovering over", index, item)
+        this.setState({
+            hoveredMenuItem: item,
+            hoveredMenuIndex: index,
+
+        })
+
+
+    }
+    selectedAvailabilityMenuItem = (item) => {
+
+        this.setState({
+            hoveredAvailabilityMenuItem: item,
+        })
+
+
+    }
+    showFloorPlan = (item) => {
+
+        this.setState({
+            showFloorPlan: true,
+            floorplanNumber: item.unit
+        })
+
+
+    }
+    scrollToItem = () => {
+        let randomIndex = 1;
+        this.flatListRef.scrollToIndex({ animated: true, index: "" + randomIndex });
+    }
+    openMainMenu = () => {
+        console.log("show menu")
+        // this.scrollToItem()
+    }
+    showAvailability = () => {
+        this.setState({ showFloorPlan: false, showMainMenu: false })
+    }
+
+    hideAvailableMenu = () => {
+
+        this.setState({ showAvailabilityMenu: false, showFloorPlan: false, showMainMenu: true })
+
+    }
+    hideMainMenu = () => {
+        this.setState({ showMenu: false, })
+
+    }
+    getItemLayout = (data, index) => (
+        { length: 50, offset: 50 * index, index }
+    )
+
     render() {
-        const { showMenu, images, playSlideshow, showAvailabilityMenu, currentUnit, currentRoute } = this.state
-        const items = [
+        const { showMenu, showFloorPlan, images, floorplan, latestRoute, hoveredMenuIndex, hideAvailableMenu, hoveredAvailabilityMenuItem, hoveredMenuItem, playSlideshow, showAvailabilityMenu, currentUnit, currentRoute } = this.state
+        const MenuItems = [
             {
                 title: 'Home',
                 link: '/',
@@ -94,9 +172,25 @@ export class Routing extends Component {
             {
                 title: 'Availability',
                 link: '/availability',
+            },
+            {
+                title: 'Neighborhood',
+                link: '/neighborhood',
             },]
-        const units = [
-            
+        const availabilityMenu = [
+            {
+                title: 'Available',
+            },
+            {
+                title: '1 Bedrooms',
+            },
+            {
+                title: '2 Bedrooms',
+            },
+            {
+                title: 'Penthouses',
+            }]
+        const Available = [
             {
                 unit: '506',
                 bed: "1",
@@ -125,7 +219,7 @@ export class Routing extends Component {
             },
             {
                 unit: '706',
-                bed: "1",
+                bed: "2",
                 bath: "2",
                 sqft: 600,
                 exposure: "SE",
@@ -138,7 +232,7 @@ export class Routing extends Component {
             },
             {
                 unit: '806',
-                bed: "1",
+                bed: "3",
                 bath: "2",
                 sqft: 600,
                 exposure: "SE",
@@ -149,39 +243,131 @@ export class Routing extends Component {
                 description: 'Explains a Hello World for React Native.',
                 image: '../assets/images/unit_preview/806.png',
             },
-           
-            
+        ]
+        const oneBedRooms = [
+            {
+                unit: '506',
+                bed: "1",
+                bath: "2",
+                sqft: 600,
+                exposure: "SE",
+                price: "890,000",
+                cc: "890",
+                ret: "890",
+                link: 'https://facebook.github.io/react-native/docs/tutorial',
+                description: 'Explains a Hello World for React Native.',
+                image: '../assets/images/unit_preview/506.png',
+            },
+            {
+                unit: '705',
+                bed: "1",
+                bath: "2",
+                sqft: 600,
+                exposure: "SE",
+                price: "890,000",
+                cc: "890",
+                ret: "890",
+                link: 'https://facebook.github.io/react-native/docs/tutorial',
+                description: 'Explains a Hello World for React Native.',
+                image: '../assets/images/unit_preview/705.png',
+            },
+        ];
+        const twoBedRooms = [
+            {
+                unit: '506',
+                bed: "2",
+                bath: "2",
+                sqft: 600,
+                exposure: "SE",
+                price: "890,000",
+                cc: "890",
+                ret: "890",
+                link: 'https://facebook.github.io/react-native/docs/tutorial',
+                description: 'Explains a Hello World for React Native.',
+                image: '../assets/images/unit_preview/506.png',
+            },
+            {
+                unit: '705',
+                bed: "2",
+                bath: "2",
+                sqft: 600,
+                exposure: "SE",
+                price: "890,000",
+                cc: "890",
+                ret: "890",
+                link: 'https://facebook.github.io/react-native/docs/tutorial',
+                description: 'Explains a Hello World for React Native.',
+                image: '../assets/images/unit_preview/705.png',
+            },
+            {
+                unit: '706',
+                bed: "2",
+                bath: "2",
+                sqft: 600,
+                exposure: "SE",
+                price: "890,000",
+                cc: "890",
+                ret: "890",
+                link: 'https://facebook.github.io/react-native/docs/tutorial',
+                description: 'Explains a Hello World for React Native.',
+                image: '../assets/images/unit_preview/706.png',
+            },
+        ];
+        const pentHouses = [
+            {
+                unit: '506',
+                bed: "3",
+                bath: "2",
+                sqft: 600,
+                exposure: "SE",
+                price: "890,000",
+                cc: "890",
+                ret: "890",
+                link: 'https://facebook.github.io/react-native/docs/tutorial',
+                description: 'Explains a Hello World for React Native.',
+                image: '../assets/images/unit_preview/506.png',
+            },
+            {
+                unit: '705',
+                bed: "3",
+                bath: "2",
+                sqft: 600,
+                exposure: "SE",
+                price: "890,000",
+                cc: "890",
+                ret: "890",
+                link: 'https://facebook.github.io/react-native/docs/tutorial',
+                description: 'Explains a Hello World for React Native.',
+                image: '../assets/images/unit_preview/705.png',
+            },
+            {
+                unit: '706',
+                bed: "3",
+                bath: "2",
+                sqft: 600,
+                exposure: "SE",
+                price: "890,000",
+                cc: "890",
+                ret: "890",
+                link: 'https://facebook.github.io/react-native/docs/tutorial',
+                description: 'Explains a Hello World for React Native.',
+                image: '../assets/images/unit_preview/706.png',
+            },
+            {
+                unit: '806',
+                bed: "3",
+                bath: "2",
+                sqft: 600,
+                exposure: "SE",
+                price: "890,000",
+                cc: "890",
+                ret: "890",
+                link: 'https://facebook.github.io/react-native/docs/tutorial',
+                description: 'Explains a Hello World for React Native.',
+                image: '../assets/images/unit_preview/806.png',
+            },
         ];
 
-        const LinkList = () => (
-            <View style={styles.menuContainer} >
-                {items.map((item, index) => {
-                    return (
-                        <Link
-                            key={index}
-                            onPress={() => items[index].title === "Availability" ?
-                                this.setState({ showAvailabilityMenu: true }) :
-                                this.setState({ currentRoute: items[index].link, showMenu: false })}
-                            underlayColor="#cc3c3c36"
-                            activeOpacity={1}
-                            style={styles.linkStyle}
-                            to={items[index].title === "Availability" ? currentRoute : items[index].link} >
-                            <TouchableOpacity
-                                activeOpacity={1}
-                                key={index}
-                                accessibilityRole={'button'}
-                                style={styles.linkContainer}>
-                                <Text
-                                    activeOpacity={1}
-                                    style={styles.menuLink}>{items[index].title}
-                                </Text>
-                            </TouchableOpacity>
-                        </Link>
-
-                    );
-                })}
-            </View>
-        );
 
         const DATA = [
             {
@@ -213,35 +399,127 @@ export class Routing extends Component {
 
             )
         }
+
+
+
+        const MenuItemsList = ({ index, title }) => {
+            // console.log("item?????", index)
+            return (
+
+                <Text style={styles.menuLink}>{title}</Text>
+            );
+        }
+
         console.log("this.state?", this.state)
         return (
             <View>
                 <NativeRouter >
-                    <View >
+                    <View>
                         <View>
-                            <View>
-                                <Modal
-                                    onShow={() => console.log("show menu")}
-                                    animationType="fade"
-                                    transparent={true}
-                                    visible={showMenu}
-                                    onRequestClose={() => this.setState({ showMenu: false, showAvailabilityMenu: false })}
-                                    onDismiss={() => this.setState({ showMenu: false, showAvailabilityMenu: false })}
-                                >
-                                    <LinkList />
-                                    <View>
+                            <Modal
+                                onShow={() => this.openMainMenu()}
+                                animationType="none"
+                                transparent={true}
+                                visible={showMenu}
+                                onRequestClose={() => this.hideMainMenu()}
+                                onDismiss={() => this.hideMainMenu()}
+                            >
+                                <View style={styles.menuContainer} >
+                                    {showAvailabilityMenu ? null : <FlatList
+                                        horizontal={true}
+                                        data={MenuItems}
+                                        renderItem={({ item, index }) => (
+                                            <Link
+                                                key={item.title}
+                                                onFocus={() => this.selectedMenuItem(item.title, index)}
+                                                tvParallaxProperties={{ enabled: false, }}
+                                                underlayColor="#ffffff00"
+                                                onPress={() => item.title === "Availability" ?
+                                                    this.setState({ showAvailabilityMenu: true, }) :
+                                                    this.setState({ currentRoute: item.link, showMenu: false, latestRoute: item.link })}
+                                                to={item.title === "Availability" ? currentRoute : item.link}
+                                                style={hoveredMenuItem == item.title ? styles.linkStyleActive : styles.linkStyle}
 
-                                        <Modal
-                                            onShow={() => console.log("show available")}
-                                            animationType="fade"
-                                            transparent={true}
-                                            visible={showAvailabilityMenu}
-                                            onRequestClose={() => this.setState({ showAvailabilityMenu: false })}
-                                            onDismiss={() => this.setState({ showAvailabilityMenu: false })}
-                                        >
-                                            <View style={styles.availabilityContainer}>
+                                            >
+                                                <MenuItemsList
+                                                    index={index}
+                                                    id={item.title}
+                                                    title={item.title}
+                                                />
+                                            </Link>
+                                        )}
+                                    />}
+                                    {/* {items.map((item, index) =>
 
-                                                <View style={styles.listContainer} >
+                                        showMainMenu ? <Link
+                                            onFocus={() => this.selectedMenuItem(items[index].title)}
+                                            tvParallaxProperties={{
+                                                enabled: false,
+                                            }}
+                                            key={index}
+                                            onPress={() => items[index].title === "Availability" ?
+                                                this.setState({ showAvailabilityMenu: true, }) :
+                                                this.setState({ currentRoute: items[index].link, showMenu: false })}
+                                            underlayColor="#ffffff00"
+                                            activeOpacity={1}
+                                            style={hoveredMenuItem == items[index].title ? styles.linkStyleActive : styles.linkStyle}
+                                            to={items[index].title === "Availability" ? currentRoute : items[index].link} >
+                                            <TouchableOpacity
+                                                activeOpacity={1}
+                                                key={index}
+                                                tvParallaxProperties={{
+                                                    enabled: false,
+                                                }}
+                                                style={styles.linkContainer}>
+                                                <Text
+                                                    activeOpacity={1}
+                                                    style={styles.menuLink}>{items[index].title}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </Link>} */}
+                                </View>
+                                <View>
+                                    <Modal
+                                        onShow={() => this.showAvailability()}
+                                        animationType="none"
+                                        transparent={true}
+                                        visible={showAvailabilityMenu}
+                                        onRequestClose={() => this.hideAvailableMenu()}
+                                        onDismiss={() => this.hideAvailableMenu()}
+                                    >
+                                        <View style={styles.availabilityMenu} >
+                                            {availabilityMenu.map((item, index) =>
+
+                                                <Link
+                                                    onFocus={() => this.selectedAvailabilityMenuItem(availabilityMenu[index].title)}
+                                                    key={index}
+                                                    tvParallaxProperties={{
+                                                        enabled: false,
+                                                    }}
+                                                    underlayColor="#ffffff00"
+                                                    activeOpacity={1}
+                                                    style={hoveredAvailabilityMenuItem == availabilityMenu[index].title ? styles.linkStyleActive : styles.linkStyle}
+                                                >
+                                                    <TouchableOpacity
+                                                        activeOpacity={1}
+                                                        key={index}
+                                                        accessibilityRole={'button'}
+
+                                                        style={styles.linkContainer}>
+                                                        <Text
+                                                            activeOpacity={1}
+                                                            style={styles.menuLink}>{availabilityMenu[index].title}
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                </Link>
+
+
+                                            )}
+                                        </View>
+                                        <View style={styles.availabilityContainer}>
+
+                                            <View style={styles.listContainer} >
+
                                                 <React.Fragment>
                                                     <View style={styles.listItemContainer}>
                                                         <Text style={styles.unitHeader}>Unit</Text>
@@ -257,55 +535,71 @@ export class Routing extends Component {
                                                     <View  >
 
                                                         <FlatList
-                                                            data={units}
+                                                            data={hoveredAvailabilityMenuItem == "1 Bedrooms" ? oneBedRooms : hoveredAvailabilityMenuItem == "2 Bedrooms" ? twoBedRooms : hoveredAvailabilityMenuItem == "Available" ? Available : hoveredAvailabilityMenuItem == "Penthouses" ? pentHouses : Available}
                                                             renderItem={({ item }) =>
                                                                 <React.Fragment  >
                                                                     <TouchableOpacity
-                                                                    key={item.unit}
-                                                                    onFocus={() => this.selectedUnit(item)}
-                                                                    tvParallaxProperties={{
-                                                                        default: false,
-                                                                    }}
-                                                                    accessibilityRole={'button'}
-                                                                    activeOpacity={1}
-                                                                    style={currentUnit == item.unit ? styles.listItemContainerActive : styles.listItemContainer}>
-                                                                        
+                                                                        key={item.unit}
+                                                                        onPress={() => this.showFloorPlan(item)}
+                                                                        onFocus={() => this.selectedUnit(item)}
+                                                                        tvParallaxProperties={{
+                                                                            enabled: false,
+                                                                        }}
+                                                                        accessibilityRole={'button'}
+                                                                        activeOpacity={1}
+                                                                        style={currentUnit == item.unit ? styles.listItemContainerActive : styles.listItemContainer}>
+
                                                                         <Item key={item.unit} unit={item} />
-                                                                </TouchableOpacity>
-                                                                <View style={styles.separator} />
+                                                                    </TouchableOpacity>
+                                                                    <View style={styles.separator} />
                                                                 </React.Fragment>
 
                                                             }
                                                             keyExtractor={item => item.id}
                                                         />
 
+
                                                     </View >
 
-                                                </React.Fragment >                                                
-                                                </View>
-                                                <View style={styles.imageContainer} >
-                                                    <Image
-                                                        source={images[currentUnit]}
-                                                        style={styles.unitImage}
-                                                    />
+                                                </React.Fragment >
+                                                <View>
+                                                    <Modal
+                                                        style={{ backgroundColor: "f1f1f1" }}
+                                                        onShow={() => console.log("show floorplan")}
+                                                        animationType="fade"
+                                                        transparent={false}
+                                                        visible={showFloorPlan}
+                                                        onRequestClose={() => console.log("closed floorplan")}
+                                                        onDismiss={() => console.log("closed floorplan")}
+                                                    >
+                                                        <View style={styles.availabilityContainer}>
+                                                            <Image
+                                                                source={floorplan["506"]}
+                                                                style={styles.unitImage}
+                                                            />
+                                                        </View>
+                                                    </Modal>
                                                 </View>
                                             </View>
-                                            {/* <View style={styles.availabilityContainer}>
-                                                <TableList />
-                                                <View style={styles.imageContainer} >
-                                                    <Image style={styles.unitImage} source={require('../assets/images/unit_preview/506.png')} />
-                                                </View>
+                                            <View style={styles.imageContainer} >
+                                                <Image
+                                                    source={images[currentUnit]}
+                                                    style={styles.unitImage}
+                                                />
+                                            </View>
 
-                                            </View> */}
-                                        </Modal>
-                                    </View >
+                                        </View>
 
-                                </Modal>
-                            </View >
-                            <Route exact path="/" render={() => <Home playSlideshow={playSlideshow} />} />
-                            <Route exact path="/test" render={() => <Test playSlideshow={playSlideshow} />} />
-                            <Route exact path="/residences" render={() => <Residences playSlideshow={playSlideshow} />} />
+                                    </Modal>
+
+                                </View >
+
+                            </Modal>
                         </View >
+                        <Route exact path="/" render={() => <Home playSlideshow={playSlideshow} />} />
+                        <Route exact path="/test" render={() => <Test playSlideshow={playSlideshow} />} />
+                        <Route exact path="/neighborhood" render={() => <Neighborhood playSlideshow={playSlideshow} />} />
+                        <Route exact path="/residences" render={() => <Residences playSlideshow={playSlideshow} />} />
                     </View >
                 </NativeRouter >
 
@@ -320,10 +614,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     availabilityContainer: {
-        marginTop: 200,
+        marginTop: 170,
         paddingBottom: 50,
-        // backgroundColor: 'red',
-        height: 980,
+        height: 1080,
         width: 1920,
         flex: 1,
         flexDirection: 'row'
@@ -426,8 +719,20 @@ const styles = StyleSheet.create({
 
 
     linkStyle: {
-        height: 50,
+        height: 40,
+        padding: 0,
+        marginRight: 30,
+
     },
+    linkStyleActive: {
+        height: 40,
+        padding: 0,
+        marginRight: 30,
+
+        borderBottomColor: 'red',
+        borderBottomWidth: 2
+    },
+
     linkContainer: {
         flexWrap: 'wrap',
         flexDirection: 'row',
@@ -441,6 +746,13 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%"
     },
+    availabilityMenu: {
+        flexDirection: 'row',
+        height: 100,
+        padding: 30,
+        // backgroundColor: 'red',
+        width: "100%"
+    },
 
     menuLink: {
         marginTop: 0,
@@ -448,8 +760,8 @@ const styles = StyleSheet.create({
         fontWeight: '200',
         color: "white",
         fontSize: 30,
-        marginRight: 30,
-        zIndex: 10
+        zIndex: 10,
+
     }
 
 });
