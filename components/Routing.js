@@ -39,6 +39,7 @@ export class Routing extends Component {
             showFloorPlan: false,
             hoveredMenuItem: null,
             hoveredAvailabilityMenuItem: "Available",
+            currentRouteName: "",
             currentPage: "/",
             latestRoute: null,
             currentUnit: 506,
@@ -54,15 +55,18 @@ export class Routing extends Component {
             }
         }
     }
+
     _enableTVEventHandler() {
         this._tvEventHandler = new TVEventHandler();
         this._tvEventHandler.enable(this, (cmp, evt) => {
             // console.log("evt", evt)
-
             if (evt.eventType === 'longSelect') {
                 this.setState({ showMenu: true })
             } else if (evt.eventType === 'playPause') {
-                this.setState(prevState => ({ playSlideshow: !prevState.playSlideshow }))
+                // this.setState(prevState => ({ playSlideshow: !prevState.playSlideshow }))
+            }
+            else if (evt.eventType === 'swipeLeft') {
+                // this.setState(prevState => ({ playSlideshow: !prevState.playSlideshow }))
             }
             else if (evt.eventType === 'focus') {
 
@@ -80,13 +84,20 @@ export class Routing extends Component {
             delete this._tvEventHandler;
         }
     }
+    openMenu = () => {
+        this.setState({ showMenu: true })
 
+    }
     componentDidMount() {
+        console.log("mountef")
+
         this._enableTVEventHandler();
         BackHandler.addEventListener('hardwareBackPress', function () {
         });
     }
-
+    componentWillMount = () => {
+        this.setState({ itemToState: 1 });
+    }
     componentWillUnmount() {
         this.backHandler.remove();
         this._disableTVEventHandler();
@@ -107,7 +118,7 @@ export class Routing extends Component {
     }
 
     selectedMenuItem = (item, index) => {
-        console.log("hovering over", index, item)
+        // console.log("hovering over", index, item)
         this.setState({
             hoveredMenuItem: item,
             hoveredMenuIndex: index,
@@ -133,12 +144,14 @@ export class Routing extends Component {
 
 
     }
-    scrollToItem = () => {
-        let randomIndex = 1;
-        this.flatListRef.scrollToIndex({ animated: true, index: "" + randomIndex });
-    }
+
     openMainMenu = () => {
-        console.log("show menu")
+        this.setState(prevProps => {
+            console.log("should hover to ", prevProps)
+            return { hoveredMenuItem: prevProps.hoveredMenuItem }
+        })
+
+        // console.log("show menu")
         // this.scrollToItem()
     }
     showAvailability = () => {
@@ -157,9 +170,17 @@ export class Routing extends Component {
     getItemLayout = (data, index) => (
         { length: 50, offset: 50 * index, index }
     )
-
+    getItemLayout(data, index) {
+        return (
+            {
+                length: yourItemHeightSize,
+                offset: yourItemHeightSize * index,
+                index
+            }
+        );
+    }
     render() {
-        const { showMenu, showFloorPlan, images, floorplan, latestRoute, hoveredMenuIndex, hideAvailableMenu, hoveredAvailabilityMenuItem, hoveredMenuItem, playSlideshow, showAvailabilityMenu, currentUnit, currentRoute } = this.state
+        const { showMenu, showFloorPlan, images, floorplan, latestRoute, hoveredMenuIndex, hideAvailableMenu, hoveredAvailabilityMenuItem, hoveredMenuItem, playSlideshow, showAvailabilityMenu, currentUnit, currentRoute, currentRouteName } = this.state
         const MenuItems = [
             {
                 title: 'Home',
@@ -369,20 +390,7 @@ export class Routing extends Component {
         ];
 
 
-        const DATA = [
-            {
-                id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-                title: 'First Item',
-            },
-            {
-                id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-                title: 'Second Item',
-            },
-            {
-                id: '58694a0f-3da1-471f-bd96-145571e29d72',
-                title: 'Third Item',
-            },
-        ];
+
         const Item = ({ unit }) => {
             return (
 
@@ -418,65 +426,44 @@ export class Routing extends Component {
                         <View>
                             <Modal
                                 onShow={() => this.openMainMenu()}
-                                animationType="none"
+                                animationType="fade"
                                 transparent={true}
                                 visible={showMenu}
                                 onRequestClose={() => this.hideMainMenu()}
                                 onDismiss={() => this.hideMainMenu()}
                             >
                                 <View style={styles.menuContainer} >
-                                    {showAvailabilityMenu ? null : <FlatList
-                                        horizontal={true}
-                                        data={MenuItems}
-                                        renderItem={({ item, index }) => (
-                                            <Link
-                                                key={item.title}
-                                                onFocus={() => this.selectedMenuItem(item.title, index)}
-                                                tvParallaxProperties={{ enabled: false, }}
-                                                underlayColor="#ffffff00"
-                                                onPress={() => item.title === "Availability" ?
-                                                    this.setState({ showAvailabilityMenu: true, }) :
-                                                    this.setState({ currentRoute: item.link, showMenu: false, latestRoute: item.link })}
-                                                to={item.title === "Availability" ? currentRoute : item.link}
-                                                style={hoveredMenuItem == item.title ? styles.linkStyleActive : styles.linkStyle}
+                                    {showAvailabilityMenu ? null :
+                                        <FlatList
+                                            ref={this.setRef}
+                                            keyExtractor={item => item._id}
 
-                                            >
-                                                <MenuItemsList
-                                                    index={index}
-                                                    id={item.title}
-                                                    title={item.title}
-                                                />
-                                            </Link>
-                                        )}
-                                    />}
-                                    {/* {items.map((item, index) =>
+                                            horizontal={true}
+                                            data={MenuItems}
+                                            renderItem={({ item, index }) => (
+                                                <Link
+                                                    key={item.title}
+                                                    onFocus={() => this.selectedMenuItem(item.title, index)}
+                                                    tvParallaxProperties={{ enabled: false, }}
+                                                    underlayColor="#ffffff00"
+                                                    onPress={() => item.title === "Availability" ?
+                                                        this.setState({ showAvailabilityMenu: true, }) :
+                                                        this.setState({ currentRoute: item.link, currentRouteName: item.title, showMenu: false, latestRoute: item.link })}
+                                                    to={item.title === "Availability" ? currentRoute : item.link}
+                                                    style={
+                                                        hoveredMenuItem == item.title ?
+                                                            styles.linkStyleActive
+                                                            :
+                                                            styles.linkStyle
 
-                                        showMainMenu ? <Link
-                                            onFocus={() => this.selectedMenuItem(items[index].title)}
-                                            tvParallaxProperties={{
-                                                enabled: false,
-                                            }}
-                                            key={index}
-                                            onPress={() => items[index].title === "Availability" ?
-                                                this.setState({ showAvailabilityMenu: true, }) :
-                                                this.setState({ currentRoute: items[index].link, showMenu: false })}
-                                            underlayColor="#ffffff00"
-                                            activeOpacity={1}
-                                            style={hoveredMenuItem == items[index].title ? styles.linkStyleActive : styles.linkStyle}
-                                            to={items[index].title === "Availability" ? currentRoute : items[index].link} >
-                                            <TouchableOpacity
-                                                activeOpacity={1}
-                                                key={index}
-                                                tvParallaxProperties={{
-                                                    enabled: false,
-                                                }}
-                                                style={styles.linkContainer}>
-                                                <Text
-                                                    activeOpacity={1}
-                                                    style={styles.menuLink}>{items[index].title}
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </Link>} */}
+                                                    }
+
+                                                >
+                                                    <Text style={styles.menuLink}>{item.title}</Text>
+                                                </Link>
+                                            )}
+                                        />}
+
                                 </View>
                                 <View>
                                     <Modal
@@ -535,6 +522,7 @@ export class Routing extends Component {
                                                     <View  >
 
                                                         <FlatList
+
                                                             data={hoveredAvailabilityMenuItem == "1 Bedrooms" ? oneBedRooms : hoveredAvailabilityMenuItem == "2 Bedrooms" ? twoBedRooms : hoveredAvailabilityMenuItem == "Available" ? Available : hoveredAvailabilityMenuItem == "Penthouses" ? pentHouses : Available}
                                                             renderItem={({ item }) =>
                                                                 <React.Fragment  >
@@ -596,10 +584,10 @@ export class Routing extends Component {
 
                             </Modal>
                         </View >
-                        <Route exact path="/" render={() => <Home playSlideshow={playSlideshow} />} />
-                        <Route exact path="/test" render={() => <Test playSlideshow={playSlideshow} />} />
-                        <Route exact path="/neighborhood" render={() => <Neighborhood playSlideshow={playSlideshow} />} />
-                        <Route exact path="/residences" render={() => <Residences playSlideshow={playSlideshow} />} />
+                        <Route exact path="/" render={() => <Home playSlideshow={playSlideshow} showMenu={showMenu} openMenu={this.openMenu} />} />
+                        <Route exact path="/test" render={() => <Test playSlideshow={playSlideshow} showMenu={showMenu} openMenu={this.openMenu} />} />
+                        <Route exact path="/neighborhood" render={() => <Neighborhood playSlideshow={playSlideshow} showMenu={showMenu} openMenu={this.openMenu} />} />
+                        <Route exact path="/residences" render={() => <Residences playSlideshow={playSlideshow} showMenu={showMenu} />} openMenu={this.openMenu} />
                     </View >
                 </NativeRouter >
 
